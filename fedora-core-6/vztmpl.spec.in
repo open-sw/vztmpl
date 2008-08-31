@@ -1,0 +1,52 @@
+%define osname		@@OSNAME@@
+%define osversion	@@OSVERSION@@
+
+Name: vztmpl-%{osname}-%{osversion}
+Version: 1.2
+Release: 1
+Summary: OpenVZ template metadata for %{osname}-%{osversion} %{_arch}.
+License: GPL
+Vendor: SWsoft
+URL:	http://openvz.org/
+Group: Applications/System
+Source: %{name}.src.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildRequires: createrepo, rpm-build, sed, gawk
+Requires: vzpkg >= 2.7.0-18
+Requires: vzrpm44, vzrpm44-python
+
+%description
+OpenVZ template metadata for %{osname}-%{osversion} %{_arch}.
+
+%prep
+%setup -n %{osname}-%{osversion} -q
+
+%build
+make
+
+%install
+make DESTDIR=%buildroot install
+
+%files
+%defattr(-, root, root)
+%dir /vz/template/*/*/*/*
+/vz/template/*/*/*/*/*
+/vz/template/*/*/*/config/.rpmmacros
+
+%clean
+test "x$RPM_BUILD_ROOT" != "x" && rm -rf $RPM_BUILD_ROOT
+
+%post
+%ifarch i386
+# Upgrade of old template (noarch) to i386 template
+# Let's move yum cache to a new location.
+mv -f /vz/template/%{osname}/%{osversion}/yum-cache/* \
+	/vz/template/%{osname}/%{osversion}/i386/yum-cache/ >/dev/null 2>&1
+# Now remove yum-cache directory
+rm -rf /vz/template/%{osname}/%{osversion}/yum-cache
+%endif
+exit 0
+
+%changelog
+* Wed Mar 22 2005 Kir Kolyshkin <kir-at-openvz.org> 2.0-1
+- initial packaging for FC5

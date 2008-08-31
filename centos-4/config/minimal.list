@@ -1,0 +1,29 @@
+# $Id: minimal.list,v 1.1 2005/10/10 15:23:38 kir Exp $
+#
+# List of packages to be installed into VPS
+# to form a "base" of Fedora Core 4 "minimal" template
+#
+# NOTE: if you change this file, you have to re-create OS template cache
+# from scratch, e.g. run vzpkgcache -f fedora-core-4--minimal
+
+
+ed
+basesystem
+coreutils
+openssh-clients
+openssh-server
+less
+vim-minimal
+iptables
+rpm
+crontabs
+gzip
+passwd
+rootfiles
+sudo
+tar
+tmpwatch
+# Add-ons for VZ
+dummy-centos-4
+vzdev
+MAKEDEV
