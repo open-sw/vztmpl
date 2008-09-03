@@ -5,7 +5,7 @@ include make.defs
 
 SUBDIRS=config addons
 
-DISTFILE=vztmpl-$(OSNAME).src.tar.bz2
+DISTFILE=vztmpl2-$(OSNAME).src.tar.bz2
 
 all: $(SUBDIRS)
 
