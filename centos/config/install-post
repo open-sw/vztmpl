@@ -1,0 +1,89 @@
+#!/bin/bash
+# Post-setup script for CentOS OS template.
+ 
+test -n "$DEBUG_EXEC" && set -o xtrace
+set -o errexit
+set -o nounset
+ 
+VZPKG_FILE=`find_template_config_file vzpkg.conf`
+VZPKG_CACHE_HOST=`get_vz_var VZPKG_CACHE_HOST`
+
+if test -n "$VZPKG_FILE"; then
+	. $VZPKG_FILE
+	if test -n "$YUM_REPO"; then
+		for repo in $VE_ROOT/etc/yum.repos.d/*.repo; do
+			mv $repo $repo.disabled
+		done
+		echo -e "$YUM_REPO" > $VE_ROOT/etc/yum.repos.d/vzpkg.repo
+	fi
+fi
+
+# Set the same timezone as for host system
+test -f /etc/localtime && cp -fp /etc/localtime $VE_ROOT/etc/localtime
+ 
+# Turn unneeded services off
+# Add the following "unneeded" services well if you managed to install it:
+#   gpm
+#   lm_sensors
+OFF_SERVICES="anacron portmap netfs"
+for S in $OFF_SERVICES; do
+	rm -f $VE_ROOT/etc/rc.d/rc?.d/$S
+done
+                                                                                
+# Turn needed services on
+ON_SERVICES="network httpd iptables xinetd"
+for S in $ON_SERVICES; do
+	if test -f $VE_ROOT/etc/init.d/$S; then
+		$VZCTL exec2 $VEID "/sbin/chkconfig $S on >/dev/null 2>&1"
+	fi
+done
+                                                                                
+# Convert system to shadow password files
+$VZCTL exec2 $VEID /usr/sbin/pwconv
+
+# Disable root login
+$VZCTL exec2 $VEID /usr/sbin/usermod -L root
+
+# Do not launch *getty on tty devices - they are not accessible from VPS
+sed -i -e '/getty/d' $VE_ROOT/etc/inittab
+
+# Disable klogd
+if test -f $VE_ROOT/etc/init.d/syslog; then
+	sed -i -e 's/daemon\\ klogd/passed\\ klogd\\ skipped/' \
+		-e 's/killproc\\ klogd/passed\\ klogd\\ skipped/' \
+			$VE_ROOT/etc/init.d/syslog
+fi
+
+# Do not execute some cron-jobs by default
+# We do not care if some files are missing, thus exec not exec2
+for file in rpm slocate.cron makewhatis.cron; do
+	test -f $VE_ROOT/etc/cron.daily/$file && chmod a-x $VE_ROOT/etc/cron.daily/$file
+done
+
+# Mount /dev/pts
+# FIXME is that needed in 2.6 kernel?
+# echo "none	/dev/pts	devpts	rw	0 0" >> $VE_ROOT/etc/fstab
+
+# Disable fsync() in syslog
+if test -f $VE_ROOT/etc/syslog.conf; then
+	sed -i -e 's@\([[:space:]]\)\(/var/log/\)@\1-\2@' $VE_ROOT/etc/syslog.conf
+fi
+
+# Disable X11Forwarding by default
+#$VZCTL exec2 $VEID \
+#	test -f /etc/ssh/sshd_config && sed -i -e s/^X11Forwarding.*$/X11Forwarding\\ no/ /etc/ssh/sshd_config
+
+# Do not try to unload iptables modules
+if test -f $VE_ROOT/etc/sysconfig/iptables-config; then
+	sed -i -e 's/^IPTABLES_MODULES_UNLOAD.*/IPTABLES_MODULES_UNLOAD=\"no\"/' $VE_ROOT/etc/sysconfig/iptables-config 
+fi
+
+# Disable nmbd in Samba (does not work in VPS)
+test -f $VE_ROOT/etc/init.d/smb && sed -i -e 's/^.*nmbd.*$/# &/' $VE_ROOT/etc/init.d/smb
+
+# Link /etc/mtab to /proc/mounts
+rm -f $VE_ROOT/etc/mtab
+ln -s /proc/mounts $VE_ROOT/etc/mtab
+
+# Set non-interactive mode for initscripts (openvz bug #46)
+sed -i -e 's/^PROMPT=.*/PROMPT=no/' $VE_ROOT/etc/sysconfig/init

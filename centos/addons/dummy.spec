@@ -1,5 +1,5 @@
 Summary: Dummy package to satisfy dependencies for VPS
-Name: dummy-centos-4
+Name: dummy-centos
 Group: Applications/System
 Vendor: SWsoft
 License: GPL

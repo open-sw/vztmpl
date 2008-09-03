@@ -17,9 +17,9 @@ SOURCES=*.tar.gz
 include ../make.defs
 
 SPEC2RPMNAME=rpm -q --queryformat \
-  '%{name}-%{version}-%{release}.%{arch}.rpm ' --specfile
+  '%{name}-%{version}-%{release}.i386.rpm ' --specfile
 SPEC2DIRRPMNAME=rpm -q --queryformat \
-  '%{arch}/%{name}-%{version}-%{release}.%{arch}.rpm ' --specfile
+  'i386/%{name}-%{version}-%{release}.i386.rpm ' --specfile
 
 RPMDIR=$(shell rpm --eval "%{_rpmdir}")
 RPMSRCDIR=$(shell rpm --eval "%{_sourcedir}")
@@ -56,7 +56,7 @@ $(DYNMF): $(SPECS) Makefile
 			echo $$R | fgrep -q -- '$(SKIPRPMS)' && continue; \
 			echo -e "$$R: $$S\n" >> $@; \
 		done; \
-		echo -e "$$RPMS:\n\trpmbuild -ba $$S" >> $@; \
+		echo -e "$$RPMS:\n\trpmbuild --target=i386 -ba $$S" >> $@; \
 		for R in $$RPMS; do \
 			echo $$R | fgrep -q -- '$(SKIPRPMS)' && continue; \
 			ARCH=`echo $$R | awk -F . '{print $$(NF-1)}'`; \
@@ -69,10 +69,12 @@ repo: $(ALLRPMS)
 	createrepo .
 
 install: repo
-	install -d $(DESTDIR)$(MYTADDONSDIR)
-	install -m 644 $(ALLRPMS) $(DESTDIR)$(MYTADDONSDIR)/
-	install -d $(DESTDIR)$(MYTADDONSDIR)/repodata/
-	install -m 644 repodata/* $(DESTDIR)$(MYTADDONSDIR)/repodata/
+	for version in $(OSVERSIONS); do \
+		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons; \
+		install -m 644 $(ALLRPMS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons; \
+		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons/repodata/; \
+		install -m 644 repodata/* $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons/repodata/; \
+	done
 
 clean:
 	rm -f $(DYNMF) $(ALLRPMS) $(CPSRC)
