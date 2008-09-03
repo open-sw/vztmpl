@@ -1,9 +1,0 @@
-OSNAME=fedora-core
-OSVERSION=4
-OSARCH=$(shell uname -i)
-
-# Common for all templates
-TEMPLATE=/vz/template
-MYTDIR=$(TEMPLATE)/$(OSNAME)/$(OSVERSION)/$(OSARCH)
-MYTCONFIGDIR=$(MYTDIR)/config
-MYTADDONSDIR=$(MYTDIR)/vz-addons

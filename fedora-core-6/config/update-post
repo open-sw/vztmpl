@@ -1,9 +1,0 @@
-#!/bin/bash
-# Post-update script for FC4 OS template.
-
-set -e
-set -u
-
-#echo "Rebuilding RPM DB ..."
-#$RPM --root $VE_ROOT --rebuilddb
-#rm -f $VE_ROOT/var/lib/rpm/__db.0*
