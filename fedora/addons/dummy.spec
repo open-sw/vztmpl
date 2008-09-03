@@ -1,25 +1,24 @@
 Summary: Dummy package to satisfy dependencies for VPS
-Name: dummy-fedora-core-4
+Name: dummy-fedora
 Group: Applications/System
 Vendor: SWsoft
 License: GPL
-Version: 1.0
-Release: 4.swsoft
+Version: 0.9.0
+Release: 1
 Autoreq: 0
 BuildRoot: %_tmppath/%name-root
 Requires: /bin/bash
-Provides: kernel = 2.6.15, module-init-tools = 3.1, modutils = 3.1, mingetty
-Provides: kernel-utils, ethtool
+Provides: module-init-tools, modutils, kernel-utils
+Provides: ethtool, mingetty, udev
 # For xorg-x11 (bug #74)
-Provides: kernel-drm = 4.3.0
+Provides: kernel-drm
 
 %description
-Dummy package to satisfy dependencies inside a VPS.
+Dummy package to satisfy dependencies inside a VE
 
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/tmp
-#cp $RPM_SOURCE_DIR/%SOURCE0 $RPM_BUILD_ROOT/tmp 
 touch $RPM_BUILD_ROOT/tmp/%name-file 
 chmod 666 $RPM_BUILD_ROOT/tmp/%name-file 
 mkdir -p $RPM_BUILD_ROOT/sbin

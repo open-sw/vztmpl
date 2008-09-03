@@ -113,6 +113,6 @@ sendmail
 sendmail-cf
 sendmail-doc
 # Add-ons for VZ
-dummy-fedora-core-4
+dummy-fedora
 vzdev
-MAKEDEV
+MAKEDEV-3.3.13

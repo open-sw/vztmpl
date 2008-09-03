@@ -2,7 +2,7 @@
 
 Name: MAKEDEV
 Version: 3.3.13
-Release: %{rel}.3.swsoft
+Release: %{rel}.4.swsoft
 Group: System Environment/Base
 License: GPL
 Source: MAKEDEV-%{version}-%{rel}.tar.gz

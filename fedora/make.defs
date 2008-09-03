@@ -1,9 +1,5 @@
 OSNAME=fedora
-OSVERSION=7
-OSARCH=$(shell uname -i)
+OSVERSIONS=7/i386 7/x86_64 8/i386 8/x86_64 9/i386 9/x86_64
 
 # Common for all templates
 TEMPLATE=/vz/template
-MYTDIR=$(TEMPLATE)/$(OSNAME)/$(OSVERSION)/$(OSARCH)
-MYTCONFIGDIR=$(MYTDIR)/config
-MYTADDONSDIR=$(MYTDIR)/vz-addons

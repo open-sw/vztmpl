@@ -29,7 +29,6 @@ Prereq: /usr/sbin/groupadd, /usr/sbin/useradd
 Prereq: /bin/mkdir, sed, textutils, fileutils, mktemp
 Provides: dev
 Obsoletes: dev
-Provides: udev = 084-13
 
 %description -n vzdev
 The Red Hat Linux operating system uses file system entries to represent

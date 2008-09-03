@@ -5,17 +5,14 @@ include make.defs
 
 SUBDIRS=config addons
 
-DISTFILE=vztmpl-$(OSNAME)-$(OSVERSION).src.tar.bz2
+DISTFILE=vztmpl2-$(OSNAME).src.tar.bz2
 
 all: $(SUBDIRS)
 
 $(SUBDIRS):
 	make -C $@
 
-install-yumdir:
-	install -d $(DESTDIR)$(MYTDIR)/yum-cache
-
-install: install-yumdir
+install:
 	for D in $(SUBDIRS); do \
 		make -C $$D $@; \
 	done
@@ -34,7 +31,7 @@ dist: $(DISTFILE)
 $(DISTFILE): clean-subdirs
 	tar -C .. --exclude CVS --exclude $(DISTFILE) \
 		--exclude \*.diff --exclude .cvsignore \
-		-cvjf $(DISTFILE) $(OSNAME)-$(OSVERSION)
+		-cvjf $(DISTFILE) $(OSNAME)
 
 rpms: clean-subdirs vztmpl.spec dist
 	RPMSRCDIR=`rpm --eval "%{_sourcedir}"` && \
@@ -48,8 +45,6 @@ srpm: clean-subdirs vztmpl.spec dist
 
 vztmpl.spec: vztmpl.spec.in
 	sed < $< > $@ \
-	  -e 's^@@OSNAME@@^$(OSNAME)^' \
-	  -e 's^@@OSVERSION@@^$(OSVERSION)^' \
-	  -e 's^@@OSARCH@@^$(OSARCH)^'
+	  -e 's^@@OSNAME@@^$(OSNAME)^'
 
 .PHONY: all config addons rpm install clean clean-subdirs
