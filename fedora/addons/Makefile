@@ -70,10 +70,10 @@ repo: $(ALLRPMS)
 
 install: repo
 	for version in $(OSVERSIONS); do \
-		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons; \
-		install -m 644 $(ALLRPMS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons; \
-		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons/repodata/; \
-		install -m 644 repodata/* $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/addons/repodata/; \
+		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/vz-addons; \
+		install -m 644 $(ALLRPMS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/vz-addons; \
+		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/vz-addons/repodata/; \
+		install -m 644 repodata/* $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/vz-addons/repodata/; \
 	done
 
 clean:

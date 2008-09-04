@@ -27,7 +27,7 @@ Group: System Environment/Base
 Summary: The most commonly-used entries in the /dev directory.
 Prereq: /usr/sbin/groupadd, /usr/sbin/useradd
 Prereq: /bin/mkdir, sed, textutils, fileutils, mktemp
-Provides: dev
+Provides: dev, udev = 999-1
 Obsoletes: dev
 
 %description -n vzdev
@@ -46,7 +46,7 @@ to be installed.
 %ifarch s390 s390x
 export S390=1
 %endif
-make OPTFLAGS="$RPM_OPT_FLAGS"
+make OPTFLAGS="$RPM_OPT_FLAGS -static"
 
 %install
 %ifarch s390 s390x

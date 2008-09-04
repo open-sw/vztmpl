@@ -9,9 +9,9 @@ Autoreq: 0
 BuildRoot: %_tmppath/%name-root
 Requires: /bin/bash
 Provides: module-init-tools, modutils, kernel-utils
-Provides: ethtool, mingetty, udev
+Provides: ethtool, mingetty, sysklogd = 1.999.999
 # For xorg-x11 (bug #74)
-Provides: kernel-drm
+Provides: kernel = 2.6.999, kernel-drm = 2.6.999
 
 %description
 Dummy package to satisfy dependencies inside a VE
