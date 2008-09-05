@@ -1,0 +1,67 @@
+#!/bin/bash
+# vim: ts=4 sw=4 ai noet
+# $Id$
+#
+# Copyright (C) 2008, Robert Nelson. Licensed under GPLv2.
+# By Robert Nelson.
+#
+
+VZPKG_FILE=`find_template_config_file vzpkg.conf`
+VZPKG_CACHE_HOST=`get_vz_var VZPKG_CACHE_HOST`
+
+if test -n "$VZPKG_FILE"; then
+	. $VZPKG_FILE
+	if test -n "$APT_SOURCES"; then
+		mv $VE_ROOT/etc/apt/sources.list $VE_ROOT/etc/apt/sources.list.disabled
+		echo -e "$YUM_REPO" > $VE_ROOT/etc/apt/sources.list
+	fi
+fi
+
+# Link /etc/mtab to /proc/mounts, so df and friends will work:
+
+rm -f $VE_ROOT/etc/mtab
+ln -s /proc/mounts $VE_ROOT/etc/mtab
+
+# Disable running gettys on terminals as a VE does not have any:
+
+if test -f $VE_ROOT/etc/inittab; then
+	sed -i -e '/getty/s/^/#/' $VE_ROOT/etc/inittab
+elif test -d $VE_ROOT/etc/event.d; then
+	rm -f $VE_ROOT/etc/event.d/tty*
+fi
+
+# Turn off doing sync() on every write for syslog's log files, to improve I/O
+# performance:
+
+if test -f $VE_ROOT/etc/syslog.conf; then
+	sed -i -e 's@\([[:space:]]\)\(/var/log/\)@\1-\2@' $VE_ROOT/etc/syslog.conf
+fi
+
+# Set Debian repositories
+
+if [ -n "$APT_SOURCES" ]; then
+	echo -e "$APT_SOURCES" > $VE_ROOT/etc/apt/sources.list
+fi
+
+# Do not start some services, stick to bare minimum:
+
+for svc in klogd quotarpc exim4 inetd
+do
+	rm -f $VE_ROOT/etc/rc?.d/[SK][0-9][0-9]$svc
+done
+
+# Fix SSH host keys
+# This is only useful if you installed SSH. Each individual VE should have its
+# own pair of SSH host keys. The code below will wipe out the existing SSH
+# keys and instruct the newly-created VE to create new SSH keys on first boot.
+
+if test -d $VE_ROOT/etc/ssh; then
+	rm -f $VE_ROOT/etc/ssh/ssh_host_*
+	cat <<-EOF > $VE_ROOT/etc/rc2.d/S15ssh_gen_host_keys
+	#!/bin/bash
+	ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N ''
+	ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''
+	rm -f \$0
+	EOF
+	chmod a+x $VE_ROOT/etc/rc2.d/S15ssh_gen_host_keys
+fi

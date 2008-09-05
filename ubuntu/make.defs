@@ -1,0 +1,5 @@
+OSNAME=ubuntu
+OSVERSIONS=feisty/amd64 feisty/i386 gutsy/amd64 gutsy/i386 hardy/amd64 hardy/i386
+
+# Common for all templates
+TEMPLATE=/vz/template
