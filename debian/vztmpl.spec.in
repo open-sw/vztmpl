@@ -13,6 +13,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: createrepo, rpm-build, sed, gawk
 Requires: vzpkg2 >= 0.9.0
+Requires: debootstrap
 Conflicts: vzpkg
 
 %description
