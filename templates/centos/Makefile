@@ -1,50 +1,29 @@
-# $Id: Makefile,v 1.5 2005/07/29 13:55:25 kir Exp $
-# Makefile to build OS template for use with OpenVZ vzpkg.
+# $Id: Makefile,v 1.3 2005/10/10 10:24:02 kir Exp $
 
-include make.defs
+include ../make.defs
 
-SUBDIRS=config addons
+SCRIPTS=install-post
+CONFIGS=default.list minimal.list packager vzpkg.conf
+MACROS=.rpmmacros
+GPGKEYS=gpgkeys/RPM-GPG-KEY-CentOS-4 gpgkeys/RPM-GPG-KEY-CentOS-5
+FILES=$(SCRIPTS) $(CONFIGS) $(GPGKEYS)
 
-DISTFILE=vztmpl2-$(OSNAME).src.tar.bz2
+all: $(FILES)
 
-all: $(SUBDIRS)
+clean:
 
-$(SUBDIRS):
-	make -C $@
-
-install:
-	for D in $(SUBDIRS); do \
-		make -C $$D $@; \
+install: all install-gpgkeys
+	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	install -m 644 $(CONFIGS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	install -m 755 $(SCRIPTS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	for version in $(OSVERSIONS); do \
+		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
+		install -m 644 $(MACROS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
 	done
 
-clean-subdirs:
-	for D in $(SUBDIRS); do \
-		make -C $$D clean; \
-	done
+install-gpgkeys:
+	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config/gpgkeys
+	install -m 644 $(GPGKEYS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config/gpgkeys
 
-clean: clean-subdirs
-	rm -f vztmpl.spec
-	rm -f $(DISTFILE)
-
-dist: $(DISTFILE)
-
-$(DISTFILE): clean-subdirs
-	tar -C .. --exclude CVS --exclude $(DISTFILE) \
-		--exclude \*.diff --exclude .cvsignore \
-		-cvjf $(DISTFILE) $(OSNAME)
-
-rpms: clean-subdirs vztmpl.spec dist
-	RPMSRCDIR=`rpm --eval "%{_sourcedir}"` && \
-	cp $(DISTFILE) $$RPMSRCDIR && \
-	rpmbuild -ba vztmpl.spec
-
-srpm: clean-subdirs vztmpl.spec dist
-	RPMSRCDIR=`rpm --eval "%{_sourcedir}"` && \
-	cp $(DISTFILE) $$RPMSRCDIR && \
-	rpmbuild -bs vztmpl.spec
-
-vztmpl.spec: vztmpl.spec.in
-	sed < $< > $@ \
-	  -e 's^@@OSNAME@@^$(OSNAME)^'
-
-.PHONY: all config addons rpm install clean clean-subdirs
+.PHONY: install install-gpgkeys clean
+.SUFFIXES:
