@@ -1,0 +1,33 @@
+Source: vztmpl2
+Section: unknown
+Priority: optional
+Maintainer: Robert Nelson <robertn@the-nelsons.org>
+Build-Depends: debhelper (>= 4)
+Standards-Version: 3.7.2
+
+Package: vztmpl2-all
+Architecture: all
+Depends: vztmpl2-centos, vztmpl2-fedora, vztmpl2-debian, vztmpl2-ubuntu
+Description: OpenVZ template metadata for everything
+ OpenVZ template metadata for everything
+
+Package: vztmpl2-centos
+Architecture: all
+Description: OpenVZ template metadata for CentOS
+ OpenVZ template metadata for CentOS
+
+Package: vztmpl2-fedora
+Architecture: all
+Description: OpenVZ template metadata for Fedora
+ OpenVZ template metadata for Fedora
+
+Package: vztmpl2-debian
+Architecture: all
+Description: OpenVZ template metadata for Debian
+ OpenVZ template metadata for Debian
+
+Package: vztmpl2-ubuntu
+Architecture: all
+Description: OpenVZ template metadata for Ubuntu
+ OpenVZ template metadata for Ubuntu
+

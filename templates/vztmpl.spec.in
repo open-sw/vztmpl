@@ -1,3 +1,5 @@
+%define template_dir	/vz/template
+
 Name: vztmpl2
 Version: @@VERSION@@
 Release: 1
@@ -20,9 +22,7 @@ OpenVZ metadata for templates
 %setup -q
 
 %install
-for dir in centos fedora debian ubuntu; do
-	make -C $dir DESTDIR=$RPM_BUILD_ROOT TEMPLATE=/vz/template install
-done
+make VERSION=%{version} TEMPLATE=%{template_dir} install
 
 %clean
 test "$RPM_BUILD_ROOT" != "" && rm -rf $RPM_BUILD_ROOT
@@ -31,6 +31,20 @@ test "$RPM_BUILD_ROOT" != "" && rm -rf $RPM_BUILD_ROOT
 # Remove yum-cache directory
 rm -rf /vz/template/*/*/*/yum-cache
 exit 0
+
+%package all
+Summary: OpenVZ template metadata for everything
+Group: Applications/System
+Requires: vzpkg2 >= 0.9.0
+Requires: vztmpl2-centos
+Requires: vztmpl2-fedora
+Requires: vztmpl2-debian
+Requires: vztmpl2-ubuntu
+
+%description all
+OpenVZ template metadata for everything
+
+%files all
 
 %package centos
 Summary: OpenVZ template metadata for CentOS
