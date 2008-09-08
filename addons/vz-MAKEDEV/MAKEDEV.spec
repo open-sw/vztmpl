@@ -1,8 +1,8 @@
 %define rel 1
 
-Name: MAKEDEV
+Name: vz-MAKEDEV
 Version: 3.3.13
-Release: %{rel}.4.swsoft
+Release: @@VERION@@%{dist}
 Group: System Environment/Base
 License: GPL
 Source: MAKEDEV-%{version}-%{rel}.tar.gz
@@ -11,6 +11,7 @@ BuildRoot: %{_tmppath}/%{name}-root
 BuildConflicts: rpm < 4.0.3-0.71, rpm-build < 4.0.3-0.71
 URL: http://www.lanana.org/docs/device-list/
 ExcludeArch: s390 s390xc
+Provides: MAKEDEV
 
 %description
 This package contains the MAKEDEV program, which makes it easier to create

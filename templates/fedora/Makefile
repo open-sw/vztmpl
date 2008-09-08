@@ -1,50 +1,31 @@
-# $Id: Makefile,v 1.5 2005/10/10 15:15:42 kir Exp $
-# Makefile to build OS template for use with OpenVZ vzpkg.
+# $Id$
 
-include make.defs
+OSNAME=fedora
+OSVERSIONS=7/i386 7/x86_64 8/i386 8/x86_64 9/i386 9/x86_64
 
-SUBDIRS=config addons
+C=config
+SCRIPTS=$(C)/install-post
+CONFIGS=$(C)/default.list $(C)/minimal.list $(C)/small.list $(C)/packager $(C)/vzpkg.conf
+MACROS=$(C)/.rpmmacros
+GPGKEYS=$(C)/gpgkeys/RPM-GPG-KEY-fedora $(C)/gpgkeys/RPM-GPG-KEY
+FILES=$(SCRIPTS) $(CONFIGS) $(GPGKEYS)
 
-DISTFILE=vztmpl2-$(OSNAME).src.tar.bz2
+all: $(FILES)
 
-all: $(SUBDIRS)
+clean:
 
-$(SUBDIRS):
-	make -C $@
-
-install:
-	for D in $(SUBDIRS); do \
-		make -C $$D $@; \
+install: all install-gpgkeys
+	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	install -m 644 $(CONFIGS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	install -m 755 $(SCRIPTS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	for version in $(OSVERSIONS); do \
+		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
+		install -m 644 $(MACROS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
 	done
 
-clean-subdirs:
-	for D in $(SUBDIRS); do \
-		make -C $$D clean; \
-	done
+install-gpgkeys:
+	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config/gpgkeys
+	install -m 644 $(GPGKEYS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config/gpgkeys
 
-clean: clean-subdirs
-	rm -f vztmpl.spec
-	rm -f $(DISTFILE)
-
-dist: $(DISTFILE)
-
-$(DISTFILE): clean-subdirs
-	tar -C .. --exclude CVS --exclude $(DISTFILE) \
-		--exclude \*.diff --exclude .cvsignore \
-		-cvjf $(DISTFILE) $(OSNAME)
-
-rpms: clean-subdirs vztmpl.spec dist
-	RPMSRCDIR=`rpm --eval "%{_sourcedir}"` && \
-	cp $(DISTFILE) $$RPMSRCDIR && \
-	rpmbuild -ba vztmpl.spec
-
-srpm: clean-subdirs vztmpl.spec dist
-	RPMSRCDIR=`rpm --eval "%{_sourcedir}"` && \
-	cp $(DISTFILE) $$RPMSRCDIR && \
-	rpmbuild -bs vztmpl.spec
-
-vztmpl.spec: vztmpl.spec.in
-	sed < $< > $@ \
-	  -e 's^@@OSNAME@@^$(OSNAME)^'
-
-.PHONY: all config addons rpm install clean clean-subdirs
+.PHONY: install install-gpgkeys clean
+.SUFFIXES:

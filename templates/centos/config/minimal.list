@@ -24,6 +24,6 @@ sudo
 tar
 tmpwatch
 # Add-ons for VZ
-dummy-centos
+vz-dummy
 vzdev
-MAKEDEV-3.3.13
+vz-MAKEDEV

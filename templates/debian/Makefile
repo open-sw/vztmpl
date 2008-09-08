@@ -1,50 +1,24 @@
-# $Id: Makefile,v 1.5 2005/10/10 15:15:42 kir Exp $
-# Makefile to build OS template for use with OpenVZ vzpkg.
+# $Id$
 
-include make.defs
+OSNAME=debian
+OSVERSIONS=sarge/i386 etch/amd64 etch/i386
 
-SUBDIRS=config
+C=config
+SCRIPTS=$(C)/install-post
+CONFIGS=$(C)/default.list $(C)/minimal.list $(C)/packager $(C)/vzpkg.conf
+FILES=$(SCRIPTS) $(CONFIGS)
 
-DISTFILE=vztmpl2-$(OSNAME).src.tar.bz2
+all: $(FILES)
 
-all: $(SUBDIRS)
+clean:
 
-$(SUBDIRS):
-	make -C $@
-
-install:
-	for D in $(SUBDIRS); do \
-		make -C $$D $@; \
+install: all
+	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	install -m 644 $(CONFIGS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	install -m 755 $(SCRIPTS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
+	for version in $(OSVERSIONS); do \
+		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
 	done
 
-clean-subdirs:
-	for D in $(SUBDIRS); do \
-		make -C $$D clean; \
-	done
-
-clean: clean-subdirs
-	rm -f vztmpl.spec
-	rm -f $(DISTFILE)
-
-dist: $(DISTFILE)
-
-$(DISTFILE): clean-subdirs
-	tar -C .. --exclude CVS --exclude $(DISTFILE) \
-		--exclude \*.diff --exclude .cvsignore \
-		-cvjf $(DISTFILE) $(OSNAME)
-
-rpms: clean-subdirs vztmpl.spec dist
-	RPMSRCDIR=`rpm --eval "%{_sourcedir}"` && \
-	cp $(DISTFILE) $$RPMSRCDIR && \
-	rpmbuild -ba vztmpl.spec
-
-srpm: clean-subdirs vztmpl.spec dist
-	RPMSRCDIR=`rpm --eval "%{_sourcedir}"` && \
-	cp $(DISTFILE) $$RPMSRCDIR && \
-	rpmbuild -bs vztmpl.spec
-
-vztmpl.spec: vztmpl.spec.in
-	sed < $< > $@ \
-	  -e 's^@@OSNAME@@^$(OSNAME)^'
-
-.PHONY: all config addons rpm install clean clean-subdirs
+.PHONY: install clean
+.SUFFIXES:

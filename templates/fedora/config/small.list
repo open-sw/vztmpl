@@ -24,6 +24,6 @@ rootfiles
 #tar
 tmpwatch
 # Add-ons for VZ
-dummy-fedora-core-4
+vz-dummy
 vzdev
-MAKEDEV
+vz-MAKEDEV

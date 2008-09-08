@@ -1,11 +1,13 @@
-# $Id: Makefile,v 1.3 2005/10/10 10:24:02 kir Exp $
+# $Id$
 
-include ../make.defs
+OSNAME=centos
+OSVERSIONS=4/i386 4/x86_64 5/i386 5/x86_64
 
-SCRIPTS=install-post
-CONFIGS=default.list minimal.list packager vzpkg.conf
-MACROS=.rpmmacros
-GPGKEYS=gpgkeys/RPM-GPG-KEY-CentOS-4 gpgkeys/RPM-GPG-KEY-CentOS-5
+C=config
+SCRIPTS=$(C)/install-post
+CONFIGS=$(C)/default.list $(C)/minimal.list $(C)/packager $(C)/vzpkg.conf
+MACROS=$(C)/.rpmmacros
+GPGKEYS=$(C)/gpgkeys/RPM-GPG-KEY-CentOS-4 $(C)/gpgkeys/RPM-GPG-KEY-CentOS-5
 FILES=$(SCRIPTS) $(CONFIGS) $(GPGKEYS)
 
 all: $(FILES)

@@ -1,0 +1,40 @@
+Summary: Dummy package to satisfy dependencies for CTs based on RedHat (RHEL, Centos and Fedora)
+Name: vz-dummy
+Group: Applications/System
+Vendor: OpenVZ
+License: GPL
+Version: @@VERSION@@
+Release: 1%{dist}
+Autoreq: 0
+BuildRoot: %_tmppath/%name-root
+Requires: /bin/bash
+Provides: kernel = 2.6.999, kernel-drm = 2.6.999
+Provides: module-init-tools, modutils, kernel-utils
+Provides: ethtool, mingetty, sysklogd = 1.999.999
+
+%description
+Dummy package to satisfy dependencies for CTs based on RedHat (RHEL, Centos and Fedora)
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/sbin
+
+# create link to fix insmod, modprobe and lsmod calls in /etc/init.d/iptables
+for i in insmod lsmod modprobe insmod.static nash; do
+    	ln -s /bin/true $RPM_BUILD_ROOT/sbin/$i
+done
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root,-)
+/sbin/insmod
+/sbin/insmod.static
+/sbin/lsmod
+/sbin/modprobe
+/sbin/nash
+
+%changelog
+* Sun Sep  7 2008 Robert Nelson <robertn@the-nelsons.org>
+  - Initial version based on new design.

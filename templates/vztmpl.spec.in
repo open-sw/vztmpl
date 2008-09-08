@@ -1,14 +1,12 @@
-%define osname		@@OSNAME@@
-
-Name: vztmpl2-%{osname}
-Version: 0.9.0
+Name: vztmpl2
+Version: @@VERSION@@
 Release: 1
-Summary: OpenVZ template metadata for %{osname}
+Summary: OpenVZ metadata for templates 
 License: GPL
-Vendor: SWsoft
+Vendor: OpenVZ
 URL:	http://openvz.org/
 Group: Applications/System
-Source: %{name}.src.tar.bz2
+Source: %{name}-%{version}.tar.bz2
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: createrepo, rpm-build, sed, gawk
@@ -16,58 +14,80 @@ Requires: vzpkg2 >= 0.9.0
 Conflicts: vzpkg
 
 %description
-OpenVZ template metadata for %{osname}
+OpenVZ metadata for templates
 
 %prep
-%setup -n %{osname} -q
-
-%build
-make
+%setup -q
 
 %install
-make DESTDIR=%buildroot install
-
-%files
-%defattr(-, root, root)
-%dir /vz/template/*/config
-%dir /vz/template/*/*/*/*
-/vz/template/*/config/*
-/vz/template/*/*/*/*/*
-/vz/template/*/*/*/config/.rpmmacros
+for dir in centos fedora debian ubuntu; do
+	make -C $dir DESTDIR=$RPM_BUILD_ROOT TEMPLATE=/vz/template install
+done
 
 %clean
-test "x$RPM_BUILD_ROOT" != "x" && rm -rf $RPM_BUILD_ROOT
+test "$RPM_BUILD_ROOT" != "" && rm -rf $RPM_BUILD_ROOT
 
 %post
 # Remove yum-cache directory
-rm -rf /vz/template/%{osname}/*/*/yum-cache
+rm -rf /vz/template/*/*/*/yum-cache
 exit 0
 
+%package centos
+Summary: OpenVZ template metadata for CentOS
+Group: Applications/System
+
+%description centos
+OpenVZ template metadata for CentOS
+
+%files centos
+%defattr(-, root, root)
+%dir /vz/template/centos/config
+%dir /vz/template/centos/*/*/*
+/vz/template/centos/config/*
+/vz/template/centos/*/*/config/.rpmmacros
+
+%package fedora
+Summary: OpenVZ template metadata for Fedora
+Group: Applications/System
+
+%description fedora
+OpenVZ template metadata for Fedora
+
+%files fedora
+%defattr(-, root, root)
+%dir /vz/template/fedora/config
+%dir /vz/template/fedora/*/*/*
+/vz/template/fedora/config/*
+/vz/template/fedora/*/*/config/.rpmmacros
+
+%package debian
+Summary: OpenVZ template metadata for Debian
+Group: Applications/System
+
+%description debian
+OpenVZ template metadata for Debian
+
+%files debian
+%defattr(-, root, root)
+%dir /vz/template/debian/config
+%dir /vz/template/debian/*/*/*
+/vz/template/debian/config/*
+/vz/template/debian/*/*/*
+
+%package ubuntu
+Summary: OpenVZ template metadata for Ubuntu
+Group: Applications/System
+
+%description ubuntu
+OpenVZ template metadata for Ubuntu
+
+%files ubuntu
+%defattr(-, root, root)
+%dir /vz/template/ubuntu/config
+%dir /vz/template/ubuntu/*/*/*
+/vz/template/ubuntu/config/*
+/vz/template/ubuntu/*/*/*
+
 %changelog
-* Wed Dec 14 2005 Kir Kolyshkin <kir-at-openvz.org> 2.0-2
-- removed anacron, added vixie-cron to default.list (bug #73)
-- fixed download URLs in yum.conf (bug #77)
-- added provides: kernel-drm to dummy package (bug #74)
-- upgrade, not install dummy package (bug #78)
-
-* Mon Oct 10 2005 Kir Kolyshkin <kir-at-openvz.org> 2.0-1
-- added support for mulitple architectures
-- added vzrpm requirement and config/rpm file
-- added config/.rpmmacros to not install locales
-- added minimal.list
-- changed name to OpenVZ
-- dev package renamed to vzdev to not trigger udev installation (bug #50)
-
-* Sat Aug  6 2005 Kir Kolyshkin <kir-at-openvz.org> 1.0-5
-- added /etc/mtab -> /proc/mounts link creation in install-post
-
-* Fri Jul 29 2005 Kir Kolyshkin <kir-at-openvz.org> 1.0-4
-- create yum-cache directory to workaround yum-2.2 bug (bug #12)
-
-* Tue Jul 19 2005 Kir Kolyshkin <kir-at-openvz.org> 1.0-2
-- fixed source tarball to be tar.bz2
-- removed swsoft suffix from %release
-- added dist target to Makefile
-
-* Mon Jun 20 2005 Kir Kolyshkin <kir-at-openvz.org> 1.0-1.swsoft
-- initial packaging
+* Sun Sep  7 2008 Robert Nelson <robertn@the-nelsons.org>
+  - Initial version of new template structure.
