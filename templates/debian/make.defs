@@ -1,5 +1,0 @@
-OSNAME=debian
-OSVERSIONS=sarge/i386 etch/amd64 etch/i386
-
-# Common for all templates
-TEMPLATE=/vz/template
