@@ -31,6 +31,7 @@ rpms: tar
 	$(MAKE) -C templates NAME=$(NAME) DESTDIR=$(DESTDIR)/templates VERSION=$(VERSION) $@
 
 debs: $(DESTDIR)/debian
+	export DESTDIR; \
 	DESTDIR=$(DESTDIR)/debian; \
 	fakeroot dpkg-buildpackage -I.git
 
