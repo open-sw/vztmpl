@@ -15,6 +15,9 @@ $(DESTDIR)/templates: $(DESTDIR)
 $(DESTDIR)/addons: $(DESTDIR)
 	mkdir $@
 
+$(DESTDIR)/debian:
+	mkdir $@
+
 tar: $(DESTDIR)/templates $(DESTDIR)/addons
 	sed -e "s/@@VERSION@@/$(VERSION)/" < templates/vztmpl.spec.in > templates/vztmpl.spec; \
 	ln -sf templates $(NAME)-$(VERSION); \
@@ -27,7 +30,8 @@ rpms: tar
 	rpmbuild -ta $(DESTDIR)/templates/$(NAME)-$(VERSION).tar.bz2
 	$(MAKE) -C templates NAME=$(NAME) DESTDIR=$(DESTDIR)/templates VERSION=$(VERSION) $@
 
-debs:
+debs: $(DESTDIR)/debian
+	DESTDIR=$(DESTDIR)/debian; \
 	fakeroot dpkg-buildpackage -I.git
 
 addons:
