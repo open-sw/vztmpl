@@ -47,7 +47,7 @@ to be installed.
 %ifarch s390 s390x
 export S390=1
 %endif
-make OPTFLAGS="$RPM_OPT_FLAGS -static"
+make OPTFLAGS="$RPM_OPT_FLAGS"
 
 %install
 %ifarch s390 s390x

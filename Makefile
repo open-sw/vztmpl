@@ -7,16 +7,16 @@ TAROPTS=--dereference
 DESTDIR:=$(shell pwd)/../dist
 
 $(DESTDIR):
-	mkdir $@
+	test -d $@ || mkdir $@
 
 $(DESTDIR)/templates: $(DESTDIR)
-	mkdir $@
+	test -d $@ || mkdir $@
 
 $(DESTDIR)/addons: $(DESTDIR)
-	mkdir $@
+	test -d $@ || mkdir $@
 
 $(DESTDIR)/debian: $(DESTDIR)
-	mkdir $@
+	test -d $@ || mkdir $@
 
 tar: $(DESTDIR)/templates $(DESTDIR)/addons
 	sed -e "s/@@VERSION@@/$(VERSION)/" < templates/vztmpl.spec.in > templates/vztmpl.spec; \

@@ -10,7 +10,7 @@ RPMDIR:=$(shell rpm --eval '%{_rpmdir}')
 
 rpms:
 	sed -e "s/@@VERSION@@/$(VERSION)/" < $(NAME).spec.in > $(NAME).spec
-	SRCRPM=$(shell rpm --define='dist %{nil}' -q --queryformat='%{name}-%{version}-%{release}.src.rpm\n' --specfile $(NAME).spec | head -1); \
+	SRCRPM=`rpm --define='dist %{nil}' -q --queryformat='%{name}-%{version}-%{release}.src.rpm\n' --specfile $(NAME).spec | head -1`; \
 	cp $(SRCTAR) $(SRCDIR); \
 	rpmbuild --define='dist %{nil}' -bs $(NAME).spec; \
 	rm $(SRCDIR)/$(SRCTAR); \
@@ -18,7 +18,7 @@ rpms:
 
 addons:
 	sed -e "s/@@VERSION@@/$(VERSION)/" < $(NAME).spec.in > $(NAME).spec; \
-	RPMS="$(shell rpm -q --specfile $(NAME).spec)"; \
+	RPMS=`rpm -q --specfile $(NAME).spec`; \
 	cp $(SRCTAR) $(SRCDIR); \
 	rpmbuild -bb $(NAME).spec; \
 	for file in $${RPMS}; do \
