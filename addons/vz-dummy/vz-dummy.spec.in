@@ -4,7 +4,7 @@ Group: Applications/System
 Vendor: OpenVZ
 License: GPL
 Version: @@VERSION@@
-Release: 1%{dist}
+Release: 1%{?dist}
 Autoreq: 0
 BuildRoot: %_tmppath/%name-root
 Requires: /bin/bash

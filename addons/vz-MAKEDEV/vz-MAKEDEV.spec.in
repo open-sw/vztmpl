@@ -2,7 +2,7 @@
 
 Name: vz-MAKEDEV
 Version: 3.3.13
-Release: @@VERION@@%{dist}
+Release: @@VERSION@@%{?dist}
 Group: System Environment/Base
 License: GPL
 Source: MAKEDEV-%{version}-%{rel}.tar.gz
@@ -41,7 +41,7 @@ The dev package is a basic part of your Red Hat Linux system and it needs
 to be installed.
 
 %prep
-%setup -q
+%setup -q -n MAKEDEV-%{version}
 
 %build
 %ifarch s390 s390x
