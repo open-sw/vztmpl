@@ -31,7 +31,7 @@ Description: OpenVZ template metadata for Debian
 
 Package: vztmpl2-ubuntu
 Architecture: all
-Depends: debootstrap, debootstrap-ubuntu
+Depends: debootstrap
 Description: OpenVZ template metadata for Ubuntu
  OpenVZ template metadata for Ubuntu
 
