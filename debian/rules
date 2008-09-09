@@ -31,7 +31,7 @@ install:
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
-	dh_builddeb --destdir=$(DESTDIR)
+	dh_builddeb
 
 binary: install
 

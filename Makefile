@@ -4,7 +4,7 @@
 NAME=vztmpl2
 VERSION=0.9.1
 TAROPTS=--dereference
-DESTDIR:=$(shell pwd)/dist
+DESTDIR:=$(shell pwd)/../dist
 
 $(DESTDIR):
 	mkdir $@
@@ -31,9 +31,8 @@ rpms: tar
 	$(MAKE) -C templates NAME=$(NAME) DESTDIR=$(DESTDIR)/templates VERSION=$(VERSION) $@
 
 debs: $(DESTDIR)/debian
-	export DESTDIR; \
-	DESTDIR=$(DESTDIR)/debian; \
 	fakeroot dpkg-buildpackage -I.git
+	mv ../vztmpl2*_$(VERSION)* $(DESTDIR)/debian
 
 addons:
 	$(MAKE) -C addons DESTDIR=$(DESTDIR)/addons VERSION=$(VERSION) $@
