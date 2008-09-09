@@ -31,7 +31,7 @@ rpms: tar
 	$(MAKE) -C templates NAME=$(NAME) DESTDIR=$(DESTDIR)/templates VERSION=$(VERSION) $@
 
 debs: $(DESTDIR)/debian
-	fakeroot dpkg-buildpackage -I.git
+	fakeroot dpkg-buildpackage -I.git -sgpg -kdministrator@opensource-sw.net
 	mv ../vztmpl2*_$(VERSION)* $(DESTDIR)/debian
 
 addons:
