@@ -15,7 +15,7 @@ $(DESTDIR)/templates: $(DESTDIR)
 $(DESTDIR)/addons: $(DESTDIR)
 	mkdir $@
 
-$(DESTDIR)/debian:
+$(DESTDIR)/debian: $(DESTDIR)
 	mkdir $@
 
 tar: $(DESTDIR)/templates $(DESTDIR)/addons
