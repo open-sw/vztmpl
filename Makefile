@@ -5,6 +5,8 @@ NAME=vztmpl2
 VERSION=0.9.2
 TAROPTS=--dereference
 DESTDIR:=$(shell pwd)/../dist
+SRPMDIR:=$(shell rpm --eval '%{_srcrpmdir}')
+RPMDIR:=$(shell rpm --eval '%{_rpmdir}')
 
 $(DESTDIR):
 	test -d $@ || mkdir $@
@@ -28,10 +30,11 @@ tar: $(DESTDIR)/templates $(DESTDIR)/addons
 rpms: tar
 	$(MAKE) -C addons DESTDIR=$(DESTDIR)/addons VERSION=$(VERSION) $@
 	rpmbuild -ta $(DESTDIR)/templates/$(NAME)-$(VERSION).tar.bz2
-	$(MAKE) -C templates NAME=$(NAME) DESTDIR=$(DESTDIR)/templates VERSION=$(VERSION) $@
+	mv $(SRPMDIR)/$(NAME)-*$(VERSION)*.src.rpm $(DESTDIR)/templates
+	mv $(RPMDIR)/noarch/$(NAME)-*$(VERSION)*.noarch.rpm $(DESTDIR)/templates
 
 debs: $(DESTDIR)/debian
-	fakeroot dpkg-buildpackage -I.git -sgpg -kdministrator@opensource-sw.net
+	fakeroot dpkg-buildpackage -I.git -us -uc
 	mv ../vztmpl2*_$(VERSION)* $(DESTDIR)/debian
 
 addons:
