@@ -103,5 +103,8 @@ OpenVZ template metadata for Ubuntu
 /vz/template/ubuntu/*/*/*
 
 %changelog
-* Sun Sep  7 2008 Robert Nelson <robertn@the-nelsons.org>
+* Wed Sep 17 2008 Robert Nelson <robertn@the-nelsons.org> - 0.9.3
+  - Change location of VZPKG_CACHE_HOST.
+
+* Sun Sep  7 2008 Robert Nelson <robertn@the-nelsons.org> - 0.9.1
   - Initial version of new template structure.
