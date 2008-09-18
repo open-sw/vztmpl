@@ -6,15 +6,11 @@
 # By Robert Nelson.
 #
 
-VZPKG_FILE=`find_template_config_file vzpkg.conf`
-VZPKG_CACHE_HOST=`get_vz_var VZPKG_CACHE_HOST`
+read_vzpkg_conf
 
-if test -n "$VZPKG_FILE"; then
-	. $VZPKG_FILE
-	if test -n "$APT_SOURCES"; then
-		mv $VE_ROOT/etc/apt/sources.list $VE_ROOT/etc/apt/sources.list.disabled
-		echo -e "$YUM_REPO" > $VE_ROOT/etc/apt/sources.list
-	fi
+if test -n "$APT_SOURCES"; then
+	mv $VE_ROOT/etc/apt/sources.list $VE_ROOT/etc/apt/sources.list.disabled
+	echo "$APT_SOURCES" > $VE_ROOT/etc/apt/sources.list
 fi
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work:
