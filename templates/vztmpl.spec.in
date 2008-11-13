@@ -72,6 +72,7 @@ OpenVZ template metadata for Fedora
 %dir /vz/template/fedora/config
 %dir /vz/template/fedora/*/*/*
 /vz/template/fedora/config/*
+/vz/template/fedora/7/config/*
 /vz/template/fedora/*/*/config/.rpmmacros
 
 %package debian

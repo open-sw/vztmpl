@@ -7,7 +7,7 @@ C=config
 SCRIPTS=$(C)/install-post
 CONFIGS=$(C)/default.list $(C)/minimal.list $(C)/small.list $(C)/packager $(C)/vzpkg.conf
 MACROS=$(C)/.rpmmacros
-GPGKEYS=$(C)/gpgkeys/RPM-GPG-KEY-fedora $(C)/gpgkeys/RPM-GPG-KEY
+GPGKEYS=$(C)/gpgkeys/RPM-GPG-KEY-fedora-8-and-9 $(C)/gpgkeys/RPM-GPG-KEY-fedora $(C)/gpgkeys/RPM-GPG-KEY
 FILES=$(SCRIPTS) $(CONFIGS) $(GPGKEYS)
 
 all: $(FILES)
@@ -22,6 +22,8 @@ install: all install-gpgkeys
 		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
 		install -m 644 $(MACROS) $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
 	done
+	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/7/config
+	install -m 644 7/config/vzpkg.conf $(DESTDIR)$(TEMPLATE)/$(OSNAME)/7/config
 
 install-gpgkeys:
 	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config/gpgkeys
