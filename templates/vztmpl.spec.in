@@ -103,6 +103,9 @@ OpenVZ template metadata for Ubuntu
 /vz/template/ubuntu/*/*/*
 
 %changelog
+* Thu Nov 13 2008 Robert Nelson <robertn@the-nelsons.org> - 0.9.4
+  - Update fedora templates to use newkey version of the update repository
+
 * Wed Sep 17 2008 Robert Nelson <robertn@the-nelsons.org> - 0.9.3
   - Change location of VZPKG_CACHE_HOST.
 

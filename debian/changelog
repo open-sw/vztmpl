@@ -1,3 +1,9 @@
+vztmpl2 (0.9.4) unstable; urgency=low
+
+  * Update fedora templates to use newkey version of the update repository
+
+ -- Robert Nelson <robertn@the-nelsons.org>  Thu, 13 Nov 2008 09:35:05 -0800
+
 vztmpl2 (0.9.3) unstable; urgency=low
 
   * Change location of VZPKG_CACHE_HOST.
