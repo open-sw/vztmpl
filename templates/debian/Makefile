@@ -19,6 +19,8 @@ install: all
 	for version in $(OSVERSIONS); do \
 		install -d $(DESTDIR)$(TEMPLATE)/$(OSNAME)/$${version}/config; \
 	done
+	install -d -m 755 $(DESTDIR)$(TEMPLATE)/$(OSNAME)/sarge/config
+	install -m 644 sarge/config/* $(DESTDIR)$(TEMPLATE)/$(OSNAME)/config
 
 .PHONY: install clean
 .SUFFIXES:
