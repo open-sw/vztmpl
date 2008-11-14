@@ -1,7 +1,7 @@
 # $Id$
 
 OSNAME=ubuntu
-OSVERSIONS=feisty/amd64 feisty/i386 gutsy/amd64 gutsy/i386 hardy/amd64 hardy/i386
+OSVERSIONS=feisty/amd64 feisty/i386 gutsy/amd64 gutsy/i386 hardy/amd64 hardy/i386 intrepid/amd64 intrepid/i386
 
 C=config
 SCRIPTS=$(C)/install-post
