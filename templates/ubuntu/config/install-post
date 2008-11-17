@@ -28,7 +28,7 @@ fi
 
 # Create Berkeley style ptys so that vzctl enter works
 if test -d $VE_ROOT/lib/udev/devices; then
-	$VZCTL exec '(cd /lib/udev/devices; MAKEDEV ptyp ttyp)'
+	$VZCTL exec $VEID '(cd /lib/udev/devices; MAKEDEV ptyp ttyp)'
 fi
 
 # Turn off doing sync() on every write for syslog's log files, to improve I/O
