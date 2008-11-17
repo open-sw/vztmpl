@@ -104,7 +104,9 @@ OpenVZ template metadata for Ubuntu
 /vz/template/ubuntu/*/*/*
 
 %changelog
-* Thu Nov 13 2008 Robert Nelson <robertn@the-nelsons.org> - 0.9.4
+* Thu Nov 16 2008 Robert Nelson <robertn@the-nelsons.org> - 0.9.4
+  - create Berkeley style ptys statically
+
   - Add ubuntu intrepid template
 
   - Update debian sarge template to match move to the debian archive
