@@ -5,13 +5,15 @@ test -n "$DEBUG_EXEC" && set -o xtrace
 set -o errexit
 set -o nounset
  
-read_vzpkg_conf
+if test -z "$NO_PKG_CACHER"; then
+	read_vzpkg_conf
 
-if test -n "$YUM_REPO"; then
-	for repo in $VE_ROOT/etc/yum.repos.d/*.repo; do
-		mv $repo $repo.disabled
-	done
-	echo "$YUM_REPO" > $VE_ROOT/etc/yum.repos.d/vzpkg.repo
+	if test -n "$YUM_REPO"; then
+		for repo in $VE_ROOT/etc/yum.repos.d/*.repo; do
+			mv $repo $repo.disabled
+		done
+		echo "$YUM_REPO" > $VE_ROOT/etc/yum.repos.d/vzpkg.repo
+	fi
 fi
 
 # Set the same timezone as for host system

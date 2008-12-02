@@ -2,7 +2,7 @@
 #
 
 NAME=vztmpl2
-VERSION=0.9.4
+VERSION=1.0.0
 TAROPTS=--dereference
 DESTDIR:=$(shell pwd)/../dist
 SRPMDIR:=$(shell rpm --eval '%{_srcrpmdir}')

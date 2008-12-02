@@ -5,13 +5,15 @@ test -n "$DEBUG_EXEC" && set -o xtrace
 set -o errexit
 set -o nounset
  
-read_vzpkg_conf
+if test -z "$NO_PKG_CACHER"; then
+	read_vzpkg_conf
 
-if test -n "$YUM_REPO"; then
-	for repo in $VE_ROOT/etc/yum.repos.d/*.repo; do
-		mv $repo $repo.disabled
-	done
-	echo "$YUM_REPO" > $VE_ROOT/etc/yum.repos.d/vzpkg.repo
+	if test -n "$YUM_REPO"; then
+		for repo in $VE_ROOT/etc/yum.repos.d/*.repo; do
+			mv $repo $repo.disabled
+		done
+		echo "$YUM_REPO" > $VE_ROOT/etc/yum.repos.d/vzpkg.repo
+	fi
 fi
 
 # Set the same timezone as for host system
@@ -42,6 +44,10 @@ $VZCTL exec2 $VEID /usr/sbin/usermod -L root
 
 # Do not launch *getty on tty devices - they are not accessible from VPS
 sed -i -e '/getty/d' $VE_ROOT/etc/inittab
+
+if test -d $VE_ROOT/etc/event.d; then
+	rm -f $VE_ROOT/etc/event.d/tty?
+fi
 
 # Disable klogd
 if test -f $VE_ROOT/etc/init.d/syslog; then

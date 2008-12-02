@@ -70,9 +70,12 @@ OpenVZ template metadata for Fedora
 %files fedora
 %defattr(-, root, root)
 %dir /vz/template/fedora/config
-%dir /vz/template/fedora/*/*/*
+%dir /vz/template/fedora/*/config
+%dir /vz/template/fedora/*/config/gpgkeys
+%dir /vz/template/fedora/*/*/config
 /vz/template/fedora/config/*
-/vz/template/fedora/7/config/*
+/vz/template/fedora/*/config/*
+/vz/template/fedora/*/config/gpgkeys/*
 /vz/template/fedora/*/*/config/.rpmmacros
 
 %package debian
@@ -104,6 +107,13 @@ OpenVZ template metadata for Ubuntu
 /vz/template/ubuntu/*/*/*
 
 %changelog
+* Mon Dec  1 2008 Robert Nelson <robertn@the-nelsons.org> - 1.0.0
+  - Add support for creating templates that don't use pkg-cacher.
+
+  - Add Fedora 10 templates
+
+  - Cleanup RPM GPG Keys
+
 * Thu Nov 16 2008 Robert Nelson <robertn@the-nelsons.org> - 0.9.4
   - create Berkeley style ptys statically
 
