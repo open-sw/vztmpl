@@ -24,13 +24,15 @@ ln -s /proc/mounts $VE_ROOT/etc/mtab
 
 if test -f $VE_ROOT/etc/inittab; then
 	sed -i -e '/getty/s/^/#/' $VE_ROOT/etc/inittab
-elif test -d $VE_ROOT/etc/event.d; then
+fi
+
+if test -d $VE_ROOT/etc/event.d; then
 	rm -f $VE_ROOT/etc/event.d/tty*
 fi
 
-# Create Berkeley style ptys so that vzctl enter works
+# Create ptys so that vzctl enter works
 if test -d $VE_ROOT/lib/udev/devices; then
-	$VZCTL exec $VEID '(cd /lib/udev/devices; MAKEDEV ptyp ttyp)'
+	$VZCTL exec $VEID '(cd /lib/udev/devices; MAKEDEV ptyp ttyp ptmx)'
 fi
 
 # Turn off doing sync() on every write for syslog's log files, to improve I/O
@@ -38,12 +40,6 @@ fi
 
 if test -f $VE_ROOT/etc/syslog.conf; then
 	sed -i -e 's@\([[:space:]]\)\(/var/log/\)@\1-\2@' $VE_ROOT/etc/syslog.conf
-fi
-
-# Set Debian repositories
-
-if [ -n "$APT_SOURCES" ]; then
-	echo -e "$APT_SOURCES" > $VE_ROOT/etc/apt/sources.list
 fi
 
 # Do not start some services, stick to bare minimum:
