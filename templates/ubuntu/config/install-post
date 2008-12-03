@@ -10,9 +10,17 @@ if test -z "$NO_PKG_CACHER"; then
 	read_vzpkg_conf
 
 	if test -n "$APT_SOURCES"; then
-		mv $VE_ROOT/etc/apt/sources.list $VE_ROOT/etc/apt/sources.list.disabled
 		echo "$APT_SOURCES" > $VE_ROOT/etc/apt/sources.list
 	fi
+else
+	cat > $VE_ROOT/etc/apt/sources.list <<EOF
+deb http://archive.ubuntu.com/ubuntu $OS_VER main multiverse restricted universe
+deb-src http://archive.ubuntu.com/ubuntu $OS_VER main multiverse restricted universe
+deb http://archive.ubuntu.com/ubuntu $OS_VER-security main multiverse restricted universe
+deb-src http://archive.ubuntu.com/ubuntu $OS_VER-security main multiverse restricted universe
+deb http://archive.ubuntu.com/ubuntu $OS_VER-updates main multiverse restricted universe
+deb-src http://archive.ubuntu.com/ubuntu $OS_VER-updates main multiverse restricted universe
+EOF
 fi
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work:
